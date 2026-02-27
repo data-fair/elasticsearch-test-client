@@ -1,5 +1,7 @@
 import es from './es.ts'
 
+let stopped = false
+
 async function main () {
   console.log('Connecting to Elasticsearch...')
   await es.connect()
@@ -25,10 +27,16 @@ Example:
   console.log('Example: import { esClient } from "./es.ts"')
   console.log('')
 
-  while(true) {
+  while(!stopped) {
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
 }
+
+process.on('SIGTERM', function onSigterm () {
+  console.info('Received SIGTERM signal, shutdown gracefully...')
+  stopped = true
+})
+
 
 main().catch(err => {
   console.error('Failed to connect to Elasticsearch:', err)
