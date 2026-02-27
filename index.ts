@@ -1,4 +1,4 @@
-import { esClient } from './es.js'
+import { esClient } from './es.ts'
 
 async function main () {
   console.log('Connecting to Elasticsearch...')
