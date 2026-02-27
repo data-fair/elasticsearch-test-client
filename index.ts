@@ -1,17 +1,28 @@
-import { esClient } from './es.ts'
+import es from './es.ts'
 
 async function main () {
   console.log('Connecting to Elasticsearch...')
-  await esClient.connect()
+  await es.connect()
 
   console.log('Performing health check...')
-  const health = await esClient.client.cluster.health()
-  console.log('Cluster health:', JSON.stringify(health, null, 2))
+  const health = await es.client.cluster.health()
+  console.log('', )
 
+  console.log(`
+Cluster health: ${JSON.stringify(health, null, 2)}
+
+Elasticsearch client is ready! You can now run your own scripts.
+
+Example:
+
+  const es = require('./es.ts')
+  await es.connect()
+  await es.client.indices.stats()
+`)
   console.log('')
-  console.log('Elasticsearch client is ready!')
-  console.log('You can now run your own scripts.')
-  console.log('Example: import { esClient } from "./es.js"')
+  console.log('')
+  console.log('')
+  console.log('Example: import { esClient } from "./es.ts"')
   console.log('')
 
   while(true) {

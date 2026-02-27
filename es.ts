@@ -92,3 +92,4 @@ export class EsClient {
 }
 
 export const esClient = new EsClient()
+export default esClient
