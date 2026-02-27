@@ -8,7 +8,6 @@ async function main () {
 
   console.log('Performing health check...')
   const health = await es.client.cluster.health()
-  console.log('', )
 
   console.log(`
 Cluster health: ${JSON.stringify(health, null, 2)}
