@@ -1,0 +1,41 @@
+name: Build CI
+
+on:
+  push:
+    branches: [ '*' ]
+    tags: [ '*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout git repository
+      uses: actions/checkout@v2
+    
+    - name: Prepare docker image tags
+      id: docker_meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ghcr.io/${{ github.repository }} 
+        tags: |
+          type=ref,event=branch
+          type=ref,event=tag
+
+    - name: Login to Github container registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push docker images
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.docker_meta.outputs.tags }}
+        labels: ${{ steps.docker_meta.outputs.labels }}
+    
+    - name: Image digest
+      run: echo ${{ steps.docker_build.outputs.digest }}
