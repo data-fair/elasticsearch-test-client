@@ -16,7 +16,7 @@ Elasticsearch client is ready! You can now run your own scripts.
 
 Example:
 
-  const es = require('./es.ts')
+  const es = require('./es.ts').default
   await es.connect()
   await es.client.indices.stats()
 `)
