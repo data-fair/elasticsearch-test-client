@@ -21,11 +21,6 @@ Example:
   await es.connect()
   await es.client.indices.stats()
 `)
-  console.log('')
-  console.log('')
-  console.log('')
-  console.log('Example: import { esClient } from "./es.ts"')
-  console.log('')
 
   while(!stopped) {
     await new Promise(resolve => setTimeout(resolve, 1000))
