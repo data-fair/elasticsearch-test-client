@@ -14,9 +14,9 @@ async function main () {
   console.log('Example: import { esClient } from "./es.js"')
   console.log('')
 
-  await new Promise(() => {
-    // Hang indefinitely to allow user to exec into the pod
-  })
+  while(true) {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
 }
 
 main().catch(err => {
