@@ -19,6 +19,19 @@ Example:
   const es = require('./es.ts').default
   await es.connect()
   await es.client.indices.stats()
+
+Draining a node before deletion:
+
+  const { drainNode } = require('./es.ts')
+  await drainNode('...')
+
+Toggle allocation during upgrades:
+
+  const { toggleAllocation } = require('./es.ts')
+  // disable
+  await toggleAllocation('primaries')
+  // re-enable
+  await toggleAllocation('on')
 `)
 
   while(!stopped) {
