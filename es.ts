@@ -93,3 +93,44 @@ export class EsClient {
 
 export const esClient = new EsClient()
 export default esClient
+
+// drain, usually before removal
+export async function drainNode(nodeName: string) {
+  try {
+    console.log(`Starting drain process for node: ${nodeName}...`);
+
+    const response = await esClient.client.cluster.putSettings({
+      body: {
+        transient: {
+          // This tells ES to exclude this specific node from shard allocation
+          "cluster.routing.allocation.exclude._name": nodeName
+        }
+      }
+    });
+
+    console.log('Setting updated successfully:', response);
+    console.log('The cluster is now moving shards off the node.');
+    
+  } catch (error) {
+    console.error('Error cordoning node:', error);
+  }
+}
+
+// toggle allocation in the cluster during upgrades
+export async function toggleAllocation(status: 'on' | 'primaries') {
+  // status should be 'all' (enabled) or 'primaries'/'none' (disabled)
+  try {
+    await esClient.client.cluster.putSettings({
+      body: {
+        transient: {
+          "cluster.routing.allocation.enable": status
+        }
+      }
+    });
+    console.log(`Shard allocation set to: ${status}`);
+  } catch (err) {
+    console.error('Failed to update settings:', err);
+  }
+}
+
+
