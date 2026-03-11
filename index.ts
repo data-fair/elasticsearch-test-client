@@ -16,22 +16,28 @@ Elasticsearch client is ready! You can now run your own scripts.
 
 Example:
 
-  const es = require('./es.ts').default
+  const { drainNode, toggleAllocation, default: es } = require('./es.ts')
   await es.connect()
-  await es.client.indices.stats()
+  
+  // global cluster health
+  await es.client.cluster.health()
 
-Draining a node before deletion:
+  // list of nodes
+  await es.client.cat.nodes()
 
-  const { drainNode } = require('./es.ts')
+  // stats of a node:
+  Object.values((await es.client.nodes.stats()).nodes).find(n => n.name === '...')
+
+  //# list of indices
+  (await es.client.indices.stats()).indices
+
+  // DANGER: draining a node before deletion:
   await drainNode('...')
 
-Toggle allocation during upgrades:
+  // DANGER: toggle allocation during upgrades:
+  await toggleAllocation('primaries') // disable
+  await toggleAllocation('on') // re-enable
 
-  const { toggleAllocation } = require('./es.ts')
-  // disable
-  await toggleAllocation('primaries')
-  // re-enable
-  await toggleAllocation('on')
 `)
 
   while(!stopped) {
